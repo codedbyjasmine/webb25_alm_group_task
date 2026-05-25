@@ -1,6 +1,6 @@
-import "../test-setup";
+import "../test-setup.js";
 import { describe, it, expect } from "vitest";
-import User from "../../src/models/User";
+import User from "../../src/models/User.js";
 
 describe("User Model", () => {
   it("should create a user", async () => {
@@ -23,7 +23,7 @@ describe("User Model", () => {
     await expect(
       User.create({
         username: "testuser2",
-        email: "test1@test.com",
+        email: "test1@test.com", // Same email
       })
     ).rejects.toThrow("E11000 duplicate key error");
   });
@@ -46,7 +46,7 @@ describe("User Model", () => {
     await expect(
       User.create({
         username: "testuser",
-        email: "invalid-email",
+        email: "invalid-email", // Invalid email format
       })
     ).rejects.toThrow("Please enter a valid email address");
   });
@@ -56,7 +56,7 @@ describe("User Model", () => {
       User.create({
         username: "testuser",
         email: "test@test.com",
-        profileImage: "invalid-url",
+        profileImage: "invalid-url", // Invalid URL format
       })
     ).rejects.toThrow("Please enter a valid URL for your image");
   });

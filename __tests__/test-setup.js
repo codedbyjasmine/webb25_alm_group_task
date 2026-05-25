@@ -7,6 +7,7 @@ let mongoServer;
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   await mongoose.connect(mongoServer.getUri());
+  await mongoose.connection.syncIndexes(); // Ensure indexes are created before tests run
 });
 
 afterEach(async () => {
