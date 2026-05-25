@@ -1,6 +1,6 @@
-require("../test-setup");
-const { describe, it, expect } = require("vitest");
-const User = require("../../src/models/User");
+import "../test-setup";
+import { describe, it, expect } from "vitest";
+import User from "../../src/models/User";
 
 describe("User Model", () => {
   it("should create a user", async () => {
@@ -14,8 +14,50 @@ describe("User Model", () => {
     expect(user.email).toBe("test@test.com");
   });
 
-  // TODO: Test that email must be unique
-  // TODO: Test that username must be unique
-  // TODO: Test that email format is validated
-  // TODO: Test that profileImage is a valid URL
+  it("should require a unique email", async () => {
+    await User.create({
+      username: "testuser1",
+      email: "test1@test.com",
+    });
+
+    await expect(
+      User.create({
+        username: "testuser2",
+        email: "test1@test.com",
+      })
+    ).rejects.toThrow("E11000 duplicate key error");
+  });
+
+  it("should require a unique username", async () => {
+    await User.create({
+      username: "testuser1",
+      email: "test1@test.com",
+    });
+
+    await expect(
+      User.create({
+        username: "testuser1", // Same username
+        email: "test2@test.com",
+      })
+    ).rejects.toThrow("E11000 duplicate key error");
+  });
+
+  it("should validate email format", async () => {
+    await expect(
+      User.create({
+        username: "testuser",
+        email: "invalid-email",
+      })
+    ).rejects.toThrow("Please enter a valid email address");
+  });
+
+  it("should validate profileImage URL format", async () => {
+    await expect(
+      User.create({
+        username: "testuser",
+        email: "test@test.com",
+        profileImage: "invalid-url",
+      })
+    ).rejects.toThrow("Please enter a valid URL for your image");
+  });
 });
