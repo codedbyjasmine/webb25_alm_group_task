@@ -22,4 +22,10 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.pre("findOneAndDelete", async function (next) {
+  const Accommodation = (await import("./Accommodation.js")).default;
+  await Accommodation.deleteMany({ userId: this.getQuery()._id });
+  next();
+});
+
 export default mongoose.model("User", userSchema);

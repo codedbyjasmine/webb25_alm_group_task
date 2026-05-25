@@ -1,7 +1,7 @@
 import "../test-setup.js";
 import { describe, it, expect } from "vitest";
 import User from "../../src/models/User.js";
-import Accommodation from "../../src/models/Accommodation";
+import Accommodation from "../../src/models/Accommodation.js";
 
 describe("Accommodation Model", () => {
   it("should create an accommodation", async () => {
@@ -80,4 +80,26 @@ describe("Accommodation Model", () => {
       })
     ).rejects.toThrow("Accommodation validation failed");
   });
-});
+
+  it("should delete accommodation when user is deleted", async () => {
+    const user = await User.create({
+      username: "deleteuser",
+      email: "deleteuser@example.com"
+    });
+
+    await Accommodation.create({
+      address: "Huvudgatan 1",
+      city: "Stockholm",
+      zipCode: "12345",
+      country: "Sweden",
+      rentalPrice: 1000,
+      rooms: 3,
+      userId: user._id
+    });
+
+    await User.findOneAndDelete({ _id: user._id });
+
+    const deletedAccommodation = await Accommodation.find({ userId: user._id });
+    expect(deletedAccommodation.length).toBe(0);
+    });
+  });
