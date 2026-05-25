@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
     profileImage: {
       type: String,
       required: false,
-      match: [/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, "Please enter a valid URL"],
+      match: [/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, "Please enter a valid URL for your image"],
     },
   },
   { timestamps: true }
